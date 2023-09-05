@@ -1,21 +1,19 @@
 # ESP32_ESPNOW_RSSI
-Esto funciona sobre dos ESP32 y se basa en parte en los ejemplos del curso de ESP32 de SARA & RUI SANTOS
 
-La idea es leer entradas digitales y temperatura desde el "emisor" y pasarlas al "receptor" que tiene unos LED y un display OLED usando el protocolo ESP_NOW de Espressif
+This works on two ESP32s and is partly based on the examples from the ESP32 course by [Sara & Rui Santos](https://randomnerdtutorials.com)
 
-Hay un LED en particular que indica si el receptor "escucha" al emisor (cuando esta encendido) y agregué una última linea al OLED con el dato del RSSI del paquete recibido.
+The idea is to read digital inputs and temperature from the "transmitter" and pass them to the "receiver" by using Espressif's ESP_NOW protocol and then display the receiving result on LEDs and an OLED display.
 
-Lo he probado en terreno y en efecto al alejarme del "emisor" el valor de RSSI se incrementa (tal cual deberia ser) y al acercarme, decrece.
+There is a particular LED that indicates if the receiver "listens" to the transmitter (when it is on) and I added a last line to the OLED with the RSSI data of the received packet.
 
-Este código contiene partes obtenidas del foro de ESP32 de Espressif copiadas y pegadas, basadas en la idea de https://www.esp32.com/viewtopic.php?t=13889 y modificadas parcialmente.
+I have tested it in the field and indeed when I move away from the "transmitter" the RSSI value increases (as it should be) and when I get closer, it decreases.
 
-Espero que mi códgio sea entendible...
+This code contains copied and pasted parts taken from the ESP32 Espressif forum, based on the idea of ​​https://www.esp32.com/viewtopic.php?t=13889 and partially modified.
 
-Si esta información te resulta útil e interesante, invitame un cafecito!!!
+I hope my code is understandable...
+
+If you find this information useful and interesting, invite me for a coffee!!!
 https://cafecito.app/marce_ferra
-
-Desde fuera de Argentina en:
-https://www.buymeacoffee.com/marceferra
 
 If you found this information useful and interesting, buy me a cafecito!!!
 https://www.buymeacoffee.com/marceferra
