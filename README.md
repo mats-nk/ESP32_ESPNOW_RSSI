@@ -6,7 +6,7 @@ The idea is to read digital inputs and temperature and transmitt them to the rec
 
 There is a particular LED that indicates if the receiver "listens" to the transmitter (when it is on) and I an OLED display that show the result from the BMP280 and the RSSI value of the received packet.
 
-![Example of what is displayed on the OLED display](Pantalla_OLED_Receptor.jpg)
+![Example of what is displayed on the OLED display](Receiver_OLED.jpg)
 
 I have tested it in the field and indeed when I move away from the "transmitter" the RSSI value increases (as it should be) and when I get closer, it decreases.
 
