@@ -1,16 +1,15 @@
 /*********
   Marce Ferra 2021
-  Proyecto de emisor y receptor para tres entradas lógicas (para contacto seco) en emisor y tres salidas lógicas de estado en receptor
-  Usando protocolo ESP NOW de Espressif
-  MODULO EMISOR con BMP280 por I2C
-  Si esta información te resulta útil e interesante, invitame un cafecito!!!
+
+  Transmitt and receiver project for three logic inputs (for dry contact) on the transmitter and three logic status outputs on the receiver
+  Using Espressif's ESP NOW protocol
+
+  Transmitter module with BMP280 by I2C
+
+  If you find this information useful and interesting, invite me for a coffee!!!
   https://cafecito.app/marce_ferra
 
-  Desde fuera de Argentina en:
-  https://www.buymeacoffee.com/marceferra
-
-  If you found this information useful and interesting, buy me a cafecito!!!
-  https://www.buymeacoffee.com/marceferra
+  From outside Argentina in:   https://www.buymeacoffee.com/marceferra
 *********/
 
 #include <esp_now.h>
@@ -19,9 +18,9 @@
 #include <Adafruit_BMP280.h>
 #include <Adafruit_Sensor.h>
 
-#define SEALEVELPRESSURE_HPA (1025.00) //Presión atmosferica promedio de Buenos Aires
+#define SEALEVELPRESSURE_HPA (1025.00) // Average atmospheric pressure of Buenos Aires
 
-Adafruit_BMP280 bmp; // I2C
+Adafruit_BMP280 bmp;                   // I2C
 float temperature;
 float humidity;
 float pressure;
@@ -30,13 +29,13 @@ float pressure;
 #define conector_2  19
 #define conector_3  5
 
-// MAC Address del ESP32 placa B "receptor"
+// MAC Address for the ESP-NOW receiver
 uint8_t broadcastAddress[] = {0xB4, 0xE6, 0x2D, 0xC1, 0x59, 0x0D};
 
 // Variable to add info about peer
 esp_now_peer_info_t peerInfo;
 
-// Estructura de datos para enviar
+// Data structure to send
 typedef struct struct_message {
   float temp;
   float pres;
@@ -48,11 +47,12 @@ typedef struct struct_message {
 
 struct_message paquete_datos;
 
-// callback when data is sent
+// Callback when data is sent
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   Serial.print("\r\nLast Packet Send Status:\t");
   Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
 }
+
 
 void setup() {
   // Init Serial Monitor
@@ -76,8 +76,7 @@ void setup() {
     return;
   }
 
-  // Once ESPNow is successfully Init, we will register for Send CB to
-  // get the status of Trasnmitted packet
+  // Once ESPNow is successfully Init, we will register for Send CB to get the status of Trasnmitted packet
   esp_now_register_send_cb(OnDataSent);
 
   // Register peer
@@ -91,6 +90,7 @@ void setup() {
     return;
   }
 }
+
 
 void loop() {
   // Set values to send
@@ -111,7 +111,7 @@ void loop() {
   else {
     Serial.println("Error sending the data");
   }
-  delay(3000);
+  delay(3000);   // Replace with millis check
 }
 
 void getReadings() {
