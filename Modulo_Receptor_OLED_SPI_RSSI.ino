@@ -1,19 +1,15 @@
 /*********
-  Marce Ferra 2021
-  Proyecto de emisor y receptor para tres entradas lógicas (para contacto seco) en emisor y tres salidas lógicas de estado en receptor
-  Usando protocolo ESP NOW de Espressif
-  MODULO RECEPTOR con intento de ver el RSSI del paquete recibido. Creo...
-  
-  Si esta información te resulta útil e interesante, invitame un cafecito!!!
+  March Ferra 2021
+  Transmitt and receiver project for three logic inputs (for dry contact) on the transmitter and three logic status outputs on the receiver
+  Using Espressif's ESP NOW protocol
+
+  Receiver module trying to see the RSSI of the received packet. Believe...
+
+  If you find this information useful and interesting, invite me for a coffee!!!
   https://cafecito.app/marce_ferra
 
-  Desde fuera de Argentina en:
-  https://www.buymeacoffee.com/marceferra
-
-  If you found this information useful and interesting, buy me a cafecito!!!
-  https://www.buymeacoffee.com/marceferra
+  From outside Argentina in:   https://www.buymeacoffee.com/marceferra
 *********/
-
 
 #include "esp_wifi.h"
 #include <esp_now.h>
@@ -40,13 +36,13 @@
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, OLED_D1, OLED_D0, OLED_DC, OLED_RES, OLED_CS);
 
-//Para "pulso"
+// For "pulse"
 unsigned long previousMillis = 0;
 const long interval = 3000;
 
 int rssi_display;
 
-// Estructura de datos para recibir
+// Data structure to receive
 typedef struct struct_message {
   float temp;
   float pres;
@@ -58,23 +54,26 @@ typedef struct struct_message {
 
 struct_message paquete_datos;
 
-// Estructuras para calcular los paquetes, el RSSI, etc
+
+// Structures to calculate packets, RSSI, etc.
 typedef struct {
   unsigned frame_ctrl: 16;
   unsigned duration_id: 16;
-  uint8_t addr1[6]; /* receiver address */
-  uint8_t addr2[6]; /* sender address */
-  uint8_t addr3[6]; /* filtering address */
+  uint8_t addr1[6];      // Receiver address
+  uint8_t addr2[6];      // Sender address
+  uint8_t addr3[6];      // Filtering address
   unsigned sequence_ctrl: 16;
-  uint8_t addr4[6]; /* optional */
+  uint8_t addr4[6];      // Optional
 } wifi_ieee80211_mac_hdr_t;
+
 
 typedef struct {
   wifi_ieee80211_mac_hdr_t hdr;
-  uint8_t payload[0]; /* network data ended with 4 bytes csum (CRC32) */
+  uint8_t payload[0];    // Network data ended with 4 bytes csum (CRC32)
 } wifi_ieee80211_packet_t;
 
-//La callback que hace la magia
+
+// The callback that does the magic
 void promiscuous_rx_cb(void *buf, wifi_promiscuous_pkt_type_t type) {
   // All espnow traffic uses action frames which are a subtype of the mgmnt frames so filter out everything else.
   if (type != WIFI_PKT_MGMT)
@@ -88,26 +87,28 @@ void promiscuous_rx_cb(void *buf, wifi_promiscuous_pkt_type_t type) {
   rssi_display = rssi;
 }
 
-// callback function that will be executed when data is received
+
+// Callback function that will be executed when data is received
 void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
   memcpy(&paquete_datos, incomingData, sizeof(paquete_datos));
   Serial.print("Bytes received: ");
   Serial.println(len);
 
-  Serial.print("Entrada 1: ");
+  Serial.print("Prohibited 1: ");
   digitalWrite(LED_verde, paquete_datos.entrada_1);
   Serial.println(paquete_datos.entrada_1);
 
-  Serial.print("Entrada 2: ");
+  Serial.print("Prohibited 2: ");
   digitalWrite(LED_amarillo, paquete_datos.entrada_2);
   Serial.println(paquete_datos.entrada_2);
 
-  Serial.print("Entrada 3: ");
+  Serial.print("Prohibited 3: ");
   digitalWrite(LED_rojo, paquete_datos.entrada_3);
   Serial.println(paquete_datos.entrada_3);
 
   Clima_display();
 }
+
 
 void setup() {
   // Initialize Serial Monitor
@@ -133,8 +134,7 @@ void setup() {
     for (;;);
   }
 
-  // Once ESPNow is successfully Init, we will register for recv CB to
-  // get recv packer info
+  // Once ESPNow is successfully Init, we will register for recv CB to get recv packer info
   esp_now_register_recv_cb(OnDataRecv);
 
   //CB para el RSSI
@@ -143,12 +143,13 @@ void setup() {
   esp_wifi_set_promiscuous_rx_cb(&promiscuous_rx_cb);
 
   Titulo();
-
 }
+
 
 void loop() {
   pulso();
 }
+
 
 void pulso() {
   unsigned long currentMillis = millis();
@@ -162,6 +163,7 @@ void pulso() {
     }
   }
 }
+
 
 void Clima_display() {
   //display.clearDisplay();
@@ -182,6 +184,7 @@ void Clima_display() {
   display.print(rssi_display);
   display.display();
 }
+
 
 void Titulo() {
   display.clearDisplay();
